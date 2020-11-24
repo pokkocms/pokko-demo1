@@ -3,7 +3,11 @@ import Link from "next/link";
 
 export const Navbar: React.FC = () => (
   <header>
-    <strong>Hello, Pokko.</strong>
+    <Link href="/">
+      <a>
+        <strong>Hello, Pokko.</strong>
+      </a>
+    </Link>
     <nav>
       <ul>
         <li>
@@ -14,11 +18,6 @@ export const Navbar: React.FC = () => (
         <li>
           <Link href="/blog">
             <a>Blog</a>
-          </Link>
-        </li>
-        <li>
-          <Link href="/about">
-            <a>About</a>
           </Link>
         </li>
       </ul>
