@@ -1,6 +1,7 @@
-import { GetStaticProps } from "next";
 import * as React from "react";
-import { articles } from "../../data";
+import { gql } from "@apollo/client";
+import { GetStaticProps } from "next";
+import { client } from "../../lib/pokko";
 import { ArticleListPage } from "../../templates/ArticleList";
 import { ArticleSummary } from "../../types";
 
@@ -18,8 +19,37 @@ const BlogListPage: React.FC<BlogListPageProps> = ({ articles }) => (
 
 export default BlogListPage;
 
+const query = gql`
+  query {
+    entries {
+      allArticle(skip: 0, take: 25, orderBy: DATE_DESC) {
+        nodes {
+          id
+          title
+          summary
+          date
+          alias
+        }
+      }
+    }
+  }
+`;
+
 export const getStaticProps: GetStaticProps = async () => {
-  const props: BlogListPageProps = { articles };
+  const res = await client.query({ query });
+
+  const props: BlogListPageProps = {
+    articles: res.data.entries.allArticle.nodes.map(
+      (ent) =>
+        ({
+          id: ent.id,
+          alias: ent.alias,
+          date: ent.date,
+          summary: ent.summary,
+          title: ent.title,
+        } as ArticleSummary)
+    ),
+  };
 
   return {
     props,
